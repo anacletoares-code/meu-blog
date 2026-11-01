@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Meu Blog | Ideias e Conteúdo</title>
+  <meta name="description" content="Um blog para compartilhar ideias, novidades e conhecimento.">
+  <meta name="theme-color" content="#111827">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 1.7;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 24px 8%;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    nav h1 {
+      font-size: 26px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .hero {
+      background: #1e293b;
+      color: white;
+      text-align: center;
+      padding: 75px 20px;
+    }
+
+    .hero h2 {
+      font-size: clamp(30px, 5vw, 46px);
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      color: #cbd5e1;
+      font-size: 17px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 45px auto;
+      padding: 0 20px;
+    }
+
+    .search {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+
+    .posts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+    }
+
+    .post {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px #0000000d;
+      transition: transform .2s;
+    }
+
+    .post:hover {
+      transform: translateY(-5px);
+    }
+
+    .post img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+    }
+
+    .post-content {
+      padding: 22px;
+    }
+
+    .post small {
+      color: #64748b;
+    }
+
+    .post h3 {
+      margin: 10px 0;
+      font-size: 21px;
+    }
+
+    .post p {
+      color: #64748b;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      padding: 11px 18px;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    #article {
+      display: none;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      margin-top: 30px;
+    }
+
+    #article h2 {
+      margin-bottom: 15px;
+    }
+
+    #article p {
+      margin: 15px 0;
+    }
+
+    footer {
+      background: #111827;
+      color: #cbd5e1;
+      text-align: center;
+      padding: 30px;
+      margin-top: 70px;
+    }
+
+    .empty {
+      color: #64748b;
+      text-align: center;
+      grid-column: 1 / -1;
+    }
+
+    @media(max-width: 600px) {
+      nav {
+        flex-direction: column;
+      }
+
+      nav a {
+        margin: 0 8px;
+      }
+
+      .hero {
+        padding: 50px 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <nav>
+    <h1>Meu Blog</h1>
+    <div>
+      <a href="#" onclick="showHome()">Início</a>
+      <a href="#posts">Artigos</a>
+      <a href="#sobre">Sobre</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <h2>Bem-vindo ao meu blog!</h2>
+  <p>Ideias, conhecimento e conteúdos para compartilhar com o mundo.</p>
+</section>
+
+<main class="container" id="posts">
+
+  <h2>Últimas publicações</h2>
+
+  <br>
+
+  <input
+    class="search"
+    type="search"
+    id="search"
+    placeholder="Pesquisar artigos..."
+    aria-label="Pesquisar artigos"
+  >
+
+  <div class="posts" id="postsList"></div>
+
+  <article id="article"></article>
+
+</main>
+
+<section class="container" id="sobre">
+  <h2>Sobre o blog</h2>
+  <p>
+    Este é meu espaço na internet para compartilhar
+    conteúdos, opiniões, ideias e novidades.
+  </p>
+</section>
+
+<footer>
+  <p>© <span id="year"></span> Meu Blog. Todos os direitos reservados.</p>
+  <p>Feito com dedicação ❤️</p>
+</footer>
+
+<script>
+  // CADASTRE SEUS ARTIGOS AQUI
+  const articles = [
+    {
+      id: 1,
+      title: "Meu primeiro artigo",
+      date: "01/11/2026",
+      category: "Novidades",
+      image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800",
+      description: "Conheça o meu novo espaço na internet!",
+      content: `
+        <p>Olá! Este é meu primeiro artigo.</p>
+        <p>Aqui você poderá publicar textos, compartilhar
+        conhecimentos e conversar com seus leitores.</p>
+        <p>Obrigado por visitar meu blog!</p>
+      `
+    },
+    {
+      id: 2,
+      title: "Como começar um blog",
+      date: "02/11/2026",
+      category: "Tutoriais",
+      image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800",
+      description: "Veja algumas dicas para começar a escrever.",
+      content: `
+        <p>Começar um blog é uma ótima maneira de compartilhar
+        suas ideias com outras pessoas.</p>
+        <p>Escolha um assunto, organize suas ideias e comece
+        a publicar conteúdo regularmente.</p>
+      `
+    },
+    {
+      id: 3,
+      title: "A importância de compartilhar conhecimento",
+      date: "03/11/2026",
+      category: "Conhecimento",
+      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800",
+      description: "O conhecimento cresce quando é compartilhado.",
+      content: `
+        <p>Compartilhar conhecimento ajuda outras pessoas
+        a aprender e descobrir novas possibilidades.</p>
+        <p>Use seu blog para fazer a diferença!</p>
+      `
+    }
+  ];
+
+  const postsList = document.getElementById("postsList");
+  const article = document.getElementById("article");
+  const search = document.getElementById("search");
+
+  function renderPosts(query = "") {
+    postsList.innerHTML = "";
+
+    const filtered = articles.filter(post =>
+      (post.title + " " + post.description + " " + post.category)
+      .toLowerCase()
+      .includes(query.toLowerCase())
+    );
+
+    if (!filtered.length) {
+      postsList.innerHTML =
+        '<p class="empty">Nenhum artigo encontrado.</p>';
+      return;
+    }
+
+    filtered.forEach(post => {
+      const card = document.createElement("div");
+      card.className = "post";
+
+      const img = document.createElement("img");
+      img.src = post.image;
+      img.alt = post.title;
+      img.loading = "lazy";
+
+      const content = document.createElement("div");
+      content.className = "post-content";
+
+      const date = document.createElement("small");
+      date.textContent = post.category + " • " + post.date;
+
+      const title = document.createElement("h3");
+      title.textContent = post.title;
+
+      const description = document.createElement("p");
+      description.textContent = post.description;
+
+      const button = document.createElement("button");
+      button.textContent = "Ler artigo";
+      button.onclick = () => openArticle(post.id);
+
+      content.append(date, title, description, button);
+      card.append(img, content);
+      postsList.appendChild(card);
+    });
+  }
+
+  function openArticle(id) {
+    const post = articles.find(item => item.id === id);
+    if (!post) return;
+
+    article.innerHTML = `
+      <button onclick="showHome()">← Voltar</button>
+      <br><br>
+      <small>${post.category} • ${post.date}</small>
+      <h2></h2>
+      <div class="article-content"></div>
+    `;
+
+    article.querySelector("h2").textContent = post.title;
+    article.querySelector(".article-content").innerHTML = post.content;
+
+    postsList.style.display = "none";
+    search.style.display = "none";
+    article.style.display = "block";
+
+    history.replaceState(null, "", "#artigo-" + id);
+    article.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function showHome() {
+    article.style.display = "none";
+    postsList.style.display = "grid";
+    search.style.display = "block";
+    history.replaceState(null, "", "#posts");
+  }
+
+  search.addEventListener("input", event => {
+    renderPosts(event.target.value);
+  });
+
+  document.getElementById("year").textContent =
+    new Date().getFullYear();
+
+  renderPosts();
+</script>
+
+</body>
+</html>

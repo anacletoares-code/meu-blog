@@ -1,0 +1,202 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const posts = (await getCollection(
+  'blog',
+  ({ data }) => !data.draft
+)).sort((a, b) =>
+  b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const formatDate = (date) =>
+  new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  }).format(date);
+---
+
+<BaseLayout
+  title="Meu Blog — Ideias e conhecimento"
+  description="Um espaço para compartilhar ideias, histórias e conhecimento."
+>
+  <div class="container">
+    <section class="hero">
+      <span class="eyebrow">UM ESPAÇO PARA IDEIAS</span>
+
+      <h1>Palavras que<br />merecem ser lidas.</h1>
+
+      <p>
+        Reflexões, histórias e conhecimento.
+        Um lugar para compartilhar o que importa.
+      </p>
+    </section>
+
+    <section id="artigos">
+      <div class="section-heading">
+        <h2>Publicações</h2>
+        <span>{posts.length} artigos</span>
+      </div>
+
+      <input
+        type="search"
+        id="search"
+        placeholder="Pesquisar artigos..."
+        aria-label="Pesquisar artigos"
+      />
+
+      <div class="post-list" id="post-list">
+        {posts.map((post) => (
+          <article
+            class="post"
+            data-search={`${post.data.title} ${post.data.description} ${post.data.category}`}
+          >
+            <div class="post-meta">
+              <span>{post.data.category}</span>
+              <time datetime={post.data.pubDate.toISOString()}>
+                {formatDate(post.data.pubDate)}
+              </time>
+            </div>
+
+            <h3>
+              <a href={`/artigos/${post.id}/`}>
+                {post.data.title}
+              </a>
+            </h3>
+
+            <p>{post.data.description}</p>
+
+            <a
+              class="read-more"
+              href={`/artigos/${post.id}/`}
+            >
+              Ler artigo →
+            </a>
+          </article>
+        ))}
+      </div>
+
+      <p id="empty" hidden>
+        Nenhum artigo encontrado.
+      </p>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: 100px 0 85px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .hero h1 {
+    font-size: clamp(40px, 8vw, 66px);
+    line-height: 1.08;
+    letter-spacing: -3px;
+    margin: 25px 0;
+    font-weight: 750;
+  }
+
+  .hero p {
+    max-width: 480px;
+    color: var(--muted);
+    font-size: 17px;
+  }
+
+  #artigos {
+    padding-top: 65px;
+  }
+
+  .section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .section-heading h2 {
+    font-size: 22px;
+    letter-spacing: -1px;
+  }
+
+  .section-heading span {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  #search {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 15px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    outline-offset: 3px;
+  }
+
+  .post {
+    padding: 27px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .post-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .post h3 {
+    font-size: 23px;
+    letter-spacing: -.7px;
+    margin: 8px 0;
+  }
+
+  .post p {
+    color: var(--muted);
+    margin: 5px 0 10px;
+    font-size: 15px;
+  }
+
+  .read-more {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  @media(max-width: 600px) {
+    .hero {
+      padding: 70px 0;
+    }
+  }
+</style>
+
+<script>
+  const search = document.querySelector<HTMLInputElement>('#search');
+  const posts = document.querySelectorAll<HTMLElement>('.post');
+  const empty = document.querySelector<HTMLElement>('#empty');
+
+  search?.addEventListener('input', () => {
+    const query = search.value.toLowerCase().trim();
+    let visible = 0;
+
+    posts.forEach((post) => {
+      const match =
+        (post.dataset.search || '').toLowerCase().includes(query);
+
+      post.hidden = !match;
+      if (match) visible++;
+    });
+
+    if (empty) empty.hidden = visible > 0;
+  });
+</script>
